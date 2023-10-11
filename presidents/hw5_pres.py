@@ -3,6 +3,7 @@
 ###
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Question 1 ============================================================
 file = pd.read_csv("US-Presidents.csv")
@@ -16,3 +17,12 @@ file = file.drop(file[file.President == "Jimmy Carter"].index)
 
 
 # Question 2 ============================================================
+fig = plt.figure()
+#fig.legend(loc='upper left')
+plot = file.groupby(['Political party[11]']).count().plot(kind='pie', y='President', legend=None, 
+	title="Political Affiliation of Presidents").get_figure()
+plot.set_size_inches(10,10)
+
+plot.legend(loc="upper right")
+plot.savefig("Q2_PoliticalAffiliation_Pie.png")
+
