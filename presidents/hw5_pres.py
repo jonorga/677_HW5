@@ -27,7 +27,7 @@ plot = file.groupby(['Political party[11]']).count().plot(kind='pie', y='Preside
 plot.set_size_inches(10,10)
 
 plot.legend(loc="upper right")
-plot.savefig("Q2_PoliticalAffiliation_Pie.png")
+plot.savefig("results/Q2_PoliticalAffiliation_Pie.png")
 print("Pie chart of political affiliation generated...\n")
 
 
@@ -52,8 +52,18 @@ for party in parties:
 	plot1.set_size_inches(10,10)
 
 	plot1.legend(loc="upper right")
-	plot1.savefig("Q4_" + party + "_ReligiousAffiliation.png")
-	print("Pie chart of religious affiliation by " + party + " party generated...\n")
+	plot1.savefig("results/Q4_" + party + "_ReligiousAffiliation.png")
+	print("Pie chart of religious affiliation by " + party + " party generated...")
 
+
+# Question 5 ============================================================
+print("\nQuestion 5:")
+
+fig2, ax2 = plt.subplots()
+ax2.plot(file["No."], file["start of presidency"])
+ax2.set(xlabel='Number', ylabel='Age at start',
+       title='test')
+ax2.grid()
+fig2.savefig("results/test.png")
 
 
