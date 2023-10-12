@@ -3,6 +3,7 @@
 ###
 
 import pandas as pd
+pd.options.mode.chained_assignment = None  # default='warn'
 import matplotlib.pyplot as plt
 
 # Question 1 ============================================================
@@ -58,12 +59,80 @@ for party in parties:
 
 # Question 5 ============================================================
 print("\nQuestion 5:")
+file_length = len(file.index)
+file["age at start"] = ''
 
-fig2, ax2 = plt.subplots()
-ax2.plot(file["No."], file["start of presidency"])
-ax2.set(xlabel='Number', ylabel='Age at start',
-       title='test')
-ax2.grid()
-fig2.savefig("results/test.png")
+i = 0
+while i <= file_length:
+	if i == 38:
+		i += 1
+		continue
+	holder = file["start of presidency"].get(i)
+	
+	years = int(holder[:2])
+	split1 = holder.split(",")
+	days = float(split1[1][1:-5])
+	perc = days / 365
+	years += perc
+	file.at[i, "age at start"] = years
+
+	i += 1
+
+
+for party in parties:
+	if "/" in party:
+		continue
+	temp = file[file["Political party[11]"] == party]
+	fig2, ax2 = plt.subplots()
+	ax2.plot(temp["No."], temp["age at start"])
+	ax2.set(xlabel='President Number', ylabel='Age at start',
+	       title='Start Age of President for ' + party)
+	ax2.grid()
+	fig2.savefig("results/Q5_Start_Age_" + party + ".png")
+	print("Line chart of start age by " + party + " party generated...")
+
+
+
+
+#fig2, ax2 = plt.subplots()
+#ax2.plot(temp["No."], temp["age at start"])
+#ax2.set(xlabel='Number', ylabel='Age at start',
+#       title='test')
+#ax2.grid()
+#fig2.savefig("results/Start_Age_" + party + ".png")
+
+
+
+
+
+
+#NoneType = type(None)
+#for party in parties:
+#	if "/" in party:
+#		continue
+#	temp = file[file["Political party[11]"] == party]
+#	file_length = len(temp.index)
+#	temp["age at start"] = ''
+
+#	i = 0
+#	while i < file_length:
+#		holder = temp["start of presidency"].iloc[i]
+		
+#		years = int(holder[:2])
+#		split1 = holder.split(",")
+#		days = float(split1[1][1:-5])
+#		perc = days / 365
+#		years += perc
+#		temp.at[i, "age at start"] = years
+
+#		i += 1
+
+#	temp = temp.astype({"No." : str})
+#	fig2, ax2 = plt.subplots()
+	#ax2.plot(temp["No."], temp["age at start"])
+	#ax2.set(xlabel='Number', ylabel='Age at start',
+	#       title='test')
+	#ax2.grid()
+	#fig2.savefig("results/Start_Age_" + party + ".png")
 
 
