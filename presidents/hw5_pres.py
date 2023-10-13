@@ -127,3 +127,16 @@ print("\n")
 # Question 6 ============================================================
 print("\nQuestion 6:")
 
+i = 0
+while i <= file_length:
+	temp = str(file["Degree"].get(i))
+	if "J.D." in temp:
+		print(file["President"].get(i) + " is the only one with a law degree, he was affiliated with the "
+			+ file["Political party[11]"].get(i) + " party.\n")
+	i += 1
+
+
+
+
+
+
