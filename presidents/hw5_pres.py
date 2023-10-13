@@ -132,11 +132,41 @@ while i <= file_length:
 	temp = str(file["Degree"].get(i))
 	if "J.D." in temp:
 		print(file["President"].get(i) + " is the only one with a law degree, he was affiliated with the "
-			+ file["Political party[11]"].get(i) + " party.\n")
+			+ file["Political party[11]"].get(i) + " party.")
 	i += 1
 
 
+print("\n")
 
+# Question 7 ============================================================
+print("\nQuestion 7:")
+
+file["level of ed"] = ''
+i = 0
+while i <= file_length:
+	if i == 38:
+		i += 1
+		continue
+	temp = str(file["Degree"].get(i))
+	if "Ph.D." in temp or "MD" in temp:
+		file.at[i, "level of ed"] = "Advanced"
+	elif "M.A." in temp or "J.D." in temp:
+		file.at[i, "level of ed"] = "Masters or JD"
+	elif "B.A." in temp or "A.B." in temp or "B.S." in temp:
+		file.at[i, "level of ed"] = "Bachelors"
+	else:
+		file.at[i, "level of ed"] = "Unknown"
+	i += 1
+
+
+fig3 = plt.figure()
+plot3 = file.groupby(['level of ed']).count().plot(kind='pie', y='President', legend=None,
+	title="Level of Education For All Presidents").get_figure()
+plot3.set_size_inches(10,10)
+
+plot3.legend(loc="upper right")
+plot3.savefig("results/Q7_LevelOfEducation.png")
+print("Pie chart of level of education generated...")
 
 
 
