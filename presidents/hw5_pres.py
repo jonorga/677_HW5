@@ -5,6 +5,7 @@
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn'
 import matplotlib.pyplot as plt
+import statistics
 
 # Question 1 ============================================================
 print("Question 1:")
@@ -168,5 +169,36 @@ plot3.legend(loc="upper right")
 plot3.savefig("results/Q7_LevelOfEducation.png")
 print("Pie chart of level of education generated...")
 
+
+
+print("\n")
+
+# Question 8 ============================================================
+print("\nQuestion 8:")
+
+i = 0
+budget = []
+while i <= file_length:
+	if i == 38:
+		i += 1
+		continue
+	if isinstance(file["% of Budget Allocated to Defense"].get(i), str):
+		temp = file["% of Budget Allocated to Defense"].get(i).split("%")
+		budget.append(float(temp[0]))
+
+	i += 1
+
+print("The average percentage of budget allocated to defense: " + str(statistics.mean(budget)) + "%")
+print("The median percentage of budget allocated to defense: " + str(statistics.median(budget)) + "%")
+
+
+
+print("\n")
+
+# Question 9 ============================================================
+print("\nQuestion 9:")
+print("1st thing I've learned is how to use pandas much better")
+print("2nd thing I've learned is Bill Clinton was a rhodes scholar")
+print("3rd thing I've learned is many more presidents than I thought never graduated college")
 
 
