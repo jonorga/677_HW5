@@ -236,17 +236,56 @@ print("")
 # TODO: You trade each week perfectly with CMG, starting with $100, how much do you make after 5 years?
 print("\nQuestion 4.1:")
 
+def Q412(file):
+	balance = 100
+	file_length = len(file.index)
+	i = 0
+	while i < file_length - 1:
+		today_stock = balance / file["Close"].get(i)
+		tmr_stock = balance / file["Close"].get(i + 1)
+		difference = abs(today_stock - tmr_stock)
+		balance += difference * file["Close"].get(i + 1)
+		i += 1
+	return str(round(balance, 2))
+
+og_cmg = pd.read_csv("cmg_with_color.csv")
+bal_cmg = Q412(og_cmg)
+print("Starting with $100 on the first day, CMG will have $" + bal_cmg + " on the last day\n")
 
 # Question 4.2 =================================================================================================
 # TODO: Same as 4.1 except for SPY
+print("\nQuestion 4.2:")
 
+og_spy = pd.read_csv("spy_with_color.csv")
+bal_spy = Q412(og_spy)
+print("Starting with $100 on the first day, SPY will have $" + bal_spy + " on the last day\n")
 
 # Question 4.3 =================================================================================================
 # TODO: How long would it take for your stock and SPY to make $176 starting from $100
+print("\nQuestion 4.3:")
+def Q43(file):
+	balance = 100
+	end = -1
+	file_length = len(file.index)
+	i = 0
+	while i < file_length - 1:
+
+		today_stock = balance / file["Close"].get(i)
+		tmr_stock = balance / file["Close"].get(i + 1)
+		difference = abs(today_stock - tmr_stock)
+		balance += difference * file["Close"].get(i + 1)
+		if balance > 176:
+			end = i
+			i = file_length
+		i += 1
+	return str(end)
+print("Starting with $100, CMG will reach $176 by day " + Q43(og_cmg))
+print("Starting with $100, SPY will reach $176 by day " + Q43(og_spy) + "\n")
 
 
 # Question 5.1 =================================================================================================
 # TODO: for both stocks, how much will you make with buy and hold?
+print("\nQuestion 5.1")
 
 
 # Question 5.2 =================================================================================================
