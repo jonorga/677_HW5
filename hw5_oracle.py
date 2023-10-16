@@ -69,7 +69,7 @@ Q11_spy_data = Q11ComputeData(file_spy)
 
 # Question 1.2 =================================================================================================
 # TODO: take data from question 1.1 and generate tables for each year
-def Q12generateTable(data, name, year):
+def Q12generateTable(data, name, year, q):
 	data = zip(*data)
 	df = pd.DataFrame(data, columns=[name, 'R Average Return', 'R Standard Deviation', '-R Total',
 	 '-R Average Return', '-R Standard Deviation', '+R Total', '+R Average Return', '+R Standard Deviation'])
@@ -80,13 +80,13 @@ def Q12generateTable(data, name, year):
 	ax.table(cellText=df.values, colLabels=df.columns, loc='center').set_fontsize(18)
 
 	print("Saving", name, "Y", year, "Table...")
-	fig.savefig("oracle_results/Q1.2_" + name + "_Y" + year + "_Table.png", dpi=1200)
+	fig.savefig("oracle_results/Q" + q + "_" + name + "_Y" + year + "_Table.png", dpi=1200)
 
 i = 0
 while i < 5:
 	if generate_all:
-		Q12generateTable(Q11_cmg_data[i], "CMG", str(i + 1))
-		Q12generateTable(Q11_spy_data[i], "SPY", str(i + 1))
+		Q12generateTable(Q11_cmg_data[i], "CMG", str(i + 1), "1.2")
+		Q12generateTable(Q11_spy_data[i], "SPY", str(i + 1), "1.2")
 	i += 1
 
 # Question 1.3 =================================================================================================
@@ -132,7 +132,55 @@ print("Yes, these weeks change year to year, the only notable thing is week 4 is
 
 # Question 3 =================================================================================================
 # TODO: Compute aggregate table across all 5 years for both stocks
+def Q3ComputeData(file):
+	data = [["Week 1", "Week 2", "Week 3", "Week 4"]]
+	temp1 = file[file["Week_of_Month"] == 1]
+	temp2 = file[file["Week_of_Month"] == 2]
+	temp3 = file[file["Week_of_Month"] == 3]
+	temp4 = file[file["Week_of_Month"] == 4]
 
+	temp = [temp1["Avg_Return"].mean(), temp2["Avg_Return"].mean(), temp3["Avg_Return"].mean(), 
+		temp4["Avg_Return"].mean()]
+	data.append(temp)
+	temp = [temp1["Volatility"].mean(), temp2["Volatility"].mean(), temp3["Volatility"].mean(), 
+		temp4["Volatility"].mean()]
+	data.append(temp)
+
+	temp = [len(temp1[temp1["Avg_Return"] < 0].index), len(temp2[temp2["Avg_Return"] < 0].index), 
+		len(temp3[temp3["Avg_Return"] < 0].index), len(temp4[temp4["Avg_Return"] < 0].index)]
+	data.append(temp)
+	temp = [temp1["Avg_Return"][temp1["Avg_Return"] < 0].mean(),
+		temp2["Avg_Return"][temp2["Avg_Return"] < 0].mean(),
+		temp3["Avg_Return"][temp3["Avg_Return"] < 0].mean(),
+		temp4["Avg_Return"][temp4["Avg_Return"] < 0].mean()]
+	data.append(temp)
+	temp = [temp1["Volatility"][temp1["Avg_Return"] < 0].mean(),
+		temp2["Volatility"][temp2["Avg_Return"] < 0].mean(),
+		temp3["Volatility"][temp3["Avg_Return"] < 0].mean(),
+		temp4["Volatility"][temp4["Avg_Return"] < 0].mean()]
+	data.append(temp)
+
+	temp = [len(temp1[temp1["Avg_Return"] >= 0].index), len(temp2[temp2["Avg_Return"] >= 0].index), 
+		len(temp3[temp3["Avg_Return"] >= 0].index), len(temp4[temp4["Avg_Return"] >= 0].index)]
+	data.append(temp)
+	temp = [temp1["Avg_Return"][temp1["Avg_Return"] >= 0].mean(),
+		temp2["Avg_Return"][temp2["Avg_Return"] >= 0].mean(),
+		temp3["Avg_Return"][temp3["Avg_Return"] >= 0].mean(),
+		temp4["Avg_Return"][temp4["Avg_Return"] >= 0].mean()]
+	data.append(temp)
+	temp = [temp1["Volatility"][temp1["Avg_Return"] >= 0].mean(),
+		temp2["Volatility"][temp2["Avg_Return"] >= 0].mean(),
+		temp3["Volatility"][temp3["Avg_Return"] >= 0].mean(),
+		temp4["Volatility"][temp4["Avg_Return"] >= 0].mean()]
+	data.append(temp)
+
+	return data
+
+cmg_q3_data = Q3ComputeData(file_cmg)
+spy_q3_data = Q3ComputeData(file_spy)
+if generate_all:
+	Q12generateTable(cmg_q3_data, "CMG", "1-5", "3")
+	Q12generateTable(spy_q3_data, "SPY", "1-5", "3")
 
 # Question 3.1 =================================================================================================
 # TODO: What are the best and worst weeks from tables generated in last question
