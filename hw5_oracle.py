@@ -69,6 +69,7 @@ Q11_spy_data = Q11ComputeData(file_spy)
 
 # Question 1.2 =================================================================================================
 # TODO: take data from question 1.1 and generate tables for each year
+print("Question 1.2:")
 def Q12generateTable(data, name, year, q):
 	data = zip(*data)
 	df = pd.DataFrame(data, columns=[name, 'R Average Return', 'R Standard Deviation', '-R Total',
@@ -83,11 +84,14 @@ def Q12generateTable(data, name, year, q):
 	fig.savefig("oracle_results/Q" + q + "_" + name + "_Y" + year + "_Table.png", dpi=1200)
 
 i = 0
-while i < 5:
-	if generate_all:
+if generate_all:
+	while i < 5:	
 		Q12generateTable(Q11_cmg_data[i], "CMG", str(i + 1), "1.2")
 		Q12generateTable(Q11_spy_data[i], "SPY", str(i + 1), "1.2")
-	i += 1
+		i += 1
+else:
+	print("Generate tables set to false...\n")
+	
 
 # Question 1.3 =================================================================================================
 # TODO: Are there more weeks with negative or non-negative returns in total?
@@ -128,7 +132,7 @@ print("Year 5 best week: week 1, worst week: week 2\n")
 
 print("\nQuestion 2.4:")
 print("Yes, these weeks change year to year, the only notable thing is week 4 is never the worst and"
-	+ " week 2 is never the best")
+	+ " week 2 is never the best\n")
 
 # Question 3 =================================================================================================
 # TODO: Compute aggregate table across all 5 years for both stocks
@@ -175,28 +179,62 @@ def Q3ComputeData(file):
 	data.append(temp)
 
 	return data
-
+print("\nQuestion 3:")
 cmg_q3_data = Q3ComputeData(file_cmg)
 spy_q3_data = Q3ComputeData(file_spy)
 if generate_all:
 	Q12generateTable(cmg_q3_data, "CMG", "1-5", "3")
 	Q12generateTable(spy_q3_data, "SPY", "1-5", "3")
+else:
+	print("Generate tables set to false...\n")
 
 # Question 3.1 =================================================================================================
 # TODO: What are the best and worst weeks from tables generated in last question
-
+print("\nQuestion 3.1:")
+print("CMG aggregate best week: week 1, worst week: week 4")
+print("SPY aggregate best week: week 1, worst week: week 3\n")
 
 # Question 3.2 =================================================================================================
 # TODO: Are these the same weeks for both stocks?
+print("\nQuestion 3.2:")
+print("CMG and SPY had the same best week, but different worst weeks.\n")
 
 
 # Question 3.3 =================================================================================================
 # TODO: For each of the weeks in your original weeks file, how many were outside the standard deviation?
 	# See PDF for equation
+print("\nQuestion 3.3:")
+
+def Q33GetData(file):
+	file_length = len(file.index)
+	file_median = file["Avg_Return"].mean()
+	file_std = file["Avg_Return"].std()
+	count = 0
+	i = 0
+	while i <= file_length:
+		temp = file["Avg_Return"].get(i)
+		try:
+			if temp < file_median - (2 * file_std) or temp > file_median + (2 * file_std):
+				count += 1
+		except:
+			do_nothing = True
+		i += 1
+	outside = count / file_length
+	if outside < 0.05:
+		print(str(round(outside*100,2)) + "% of the weeks are outside of the specified range, "
+			+ "this is consistant with the normality of returns")
+	else:
+		print(str(round(outside*100,2)) + "% of the weeks are outside of the specified range, "
+			+ "this is inconsistant with the normality of returns")
+
+Q33GetData(file_cmg)
+Q33GetData(file_spy)
+print("")
 
 
 # Question 4.1 =================================================================================================
 # TODO: You trade each week perfectly with CMG, starting with $100, how much do you make after 5 years?
+print("\nQuestion 4.1:")
 
 
 # Question 4.2 =================================================================================================
