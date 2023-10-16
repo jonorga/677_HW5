@@ -112,7 +112,23 @@ print("No. These results change frequently and don't seem to depend on the week 
 
 # Question 2 =================================================================================================
 # TODO: Answers from analyzing tables
+print("\nQuestion 2.1:")
+print("There doesn't seem to be any consistancy across weeks of the month, no obvious patterns emerge.\n")
 
+print("\nQuestion 2.2:")
+print("In addition to a lack of patttern within a given year, there doesn't seem to be a pattern from "
+	+ "year to year\n")
+
+print("\nQuestion 2.3:")
+print("Year 1 best week: week 4, worst week: week 1")
+print("Year 2 best week: week 1, worst week: week 3")
+print("Year 3 best week: week 3, worst week: week 1")
+print("Year 4 best week: week 4, worst week: week 2")
+print("Year 5 best week: week 1, worst week: week 2\n")
+
+print("\nQuestion 2.4:")
+print("Yes, these weeks change year to year, the only notable thing is week 4 is never the worst and"
+	+ " week 2 is never the best")
 
 # Question 3 =================================================================================================
 # TODO: Compute aggregate table across all 5 years for both stocks
