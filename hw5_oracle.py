@@ -5,6 +5,7 @@
 # TODO: Get CMG and SPY files
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 generate_all = False
 
@@ -285,22 +286,109 @@ print("Starting with $100, SPY will reach $176 by day " + Q43(og_spy) + "\n")
 
 # Question 5.1 =================================================================================================
 # TODO: for both stocks, how much will you make with buy and hold?
-print("\nQuestion 5.1")
+print("\nQuestion 5.1:")
+def Q51(file):
+	your_stock = 100 / file["Close"].get(0)
+	balance = your_stock * file["Close"].get(len(file.index) - 1)
+	return str(round(balance, 2))
+
+
+cmg_q51_bnh = Q51(og_cmg)
+spy_q51_bnh = Q51(og_spy)
+print("Starting with $100, using buy and hold CMG will have $" + cmg_q51_bnh + " by the end of year 5")
+print("Starting with $100, using buy and hold SPY will have $" + spy_q51_bnh + " by the end of year 5\n")
 
 
 # Question 5.2 =================================================================================================
 # TODO: How does the results of 5.1 compare to 4
+print("\nQuestion 5.2:")
+print("For both stocks, the oracle was way better at trading than buy and hold. This is due to the "
+	+ "exponential growth that occurs from always making the correct trade.\n")
 
 
 # Question 5.3 =================================================================================================
 # TODO: Buy and hold except you put it into cash at end of may, and back into stock on last day of august
 	# Summarize in table, see PDF
+print("\nQuestion 5.3:")
+def Q53(file):
+	file_length = len(file.index)
+	i = 0
+	balance = 100
+	your_stock = 100 / file["Close"].get(0)
+	in_cash = False
+	while i < file_length:
+		temp = file["Date"].get(i).split("/")
+		if temp[0] == "6" and not in_cash:
+			in_cash = True
+			balance = your_stock * file["Close"].get(i - 1)
+		if temp[0] == "9" and in_cash:
+			in_cash = False
+			your_stock = balance / file["Close"].get(i - 1)
+		i += 1
+	if not in_cash:
+		balance = your_stock * file["Close"].get(i - 1)
+	return round(balance, 2)
+
+def Q5GenerateTable(data, q):
+	df = pd.DataFrame(data, columns=['Strategy', 'Chipotle Mexican Grill', 'S&P-500'])
+	fig, ax = plt.subplots()
+	fig.patch.set_visible(False)
+	ax.axis('off')
+	ax.axis('tight')
+	ax.table(cellText=df.values, colLabels=df.columns, loc='center').set_fontsize(18)
+
+	print("Saving Q" + q + " Table...\n")
+	fig.savefig("oracle_results/Q" + q + "_Table.png", dpi=1200)
+
+cmg_q53_bnh = Q53(og_cmg)
+spy_q53_bnh = Q53(og_spy)
+
+cmg_q53_data = [["Buy-and-hold", cmg_q51_bnh, spy_q51_bnh], ["Buy-and-hold with Summer Vacation", cmg_q53_bnh, spy_q53_bnh]]
+if generate_all:
+	Q5GenerateTable(cmg_q53_data, "5.3")
+else:
+	print("Generate tables set to false...\n")
 
 
 # Question 5.4 =================================================================================================
 # TODO: Both stocks, buy and hold 12 times, except each time, for one month of the year, sell on the first trading
 # day of that month, and buy on the last trading day of that month
 	# Summarize in table, see PDF
+print("\nQuestion 5.4:")
+def Q54(file, month):
+	file_length = len(file.index)
+	i = 1
+	balance = 100
+	your_stock = 100 / file["Close"].get(0)
+	in_cash = False
+	if month == 12:
+		next_month = 1
+	else:
+		next_month = month + 1
+	while i < file_length:
+		temp = file["Date"].get(i).split("/")
+		if temp[0] == str(month) and not in_cash:
+			in_cash = True
+			balance = your_stock * file["Close"].get(i - 1)
+		if temp[0] == str(next_month) and in_cash:
+			in_cash = False
+			your_stock = balance / file["Close"].get(i - 1)
+		i += 1
+	if not in_cash:
+		balance = your_stock * file["Close"].get(i - 1)
+	return round(balance, 2)
+
+months = np.arange(1, 13)
+q54_data = [[]] * 13
+q54_data[0] = ["Buy-and-hold (B&H)", cmg_q51_bnh, spy_q51_bnh]
+for i in months:
+	q54_data[i] = ["B&H without " + str(i), Q54(og_cmg, i), Q54(og_spy, i)]
+
+if generate_all:
+	Q5GenerateTable(q54_data, "5.4")
+else:
+	print("Generate tables set to false...\n")
+
 
 
 # Question 6 =================================================================================================
