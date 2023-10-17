@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-generate_all = False
+generate_all = True
 
 file_cmg = pd.read_csv("cmg_weeks.csv")
 file_spy = pd.read_csv("spy_weeks.csv")
@@ -441,5 +441,62 @@ print("For both stocks, there is an exponential increase in end balance as p inc
 
 # Question 7.1 =================================================================================================
 # TODO: Compute table from question
+print("\nQuestion 7.1:")
+
+def Q7(file, opposite_weeks):	
+	dates = []
+	for index, row in opposite_weeks.iterrows():
+		dates.append(row["Date"])
+	balance = 100
+	file_length = len(file.index)
+	i = 0
+	lie = False
+	while i < file_length - 1:
+		if file["Date"].get(i) in dates:
+			lie = True
+		today_stock = balance / file["Close"].get(i)
+		tmr_stock = balance / file["Close"].get(i + 1)
+		difference = abs(today_stock - tmr_stock)
+		if lie:
+			balance -= difference * file["Close"].get(i + 1)
+		else:
+			balance += difference * file["Close"].get(i + 1)
+		lie = False
+		i += 1
+	return round(balance, 2)
+
+cmg_best_10 = og_cmg.nlargest(10, columns='Return')
+cmg_best_5 = og_cmg.nlargest(5, columns='Return')
+cmg_worst_10 = og_cmg.nsmallest(10, columns='Return')
+cmg_worst_5 = og_cmg.nsmallest(5, columns='Return')
+spy_best_10 = og_spy.nlargest(10, columns='Return')
+spy_best_5 = og_spy.nlargest(5, columns='Return')
+spy_worst_10 = og_spy.nsmallest(10, columns='Return')
+spy_worst_5 = og_spy.nsmallest(5, columns='Return')
+
+cmg_combine = pd.concat([cmg_best_5, cmg_worst_5])
+spy_combine = pd.concat([spy_best_5, spy_worst_5])
+#Q7(og_cmg, best_weeks_10)
+
+q7_data = [["Buy-and-hold (B&H)", cmg_q51_bnh, spy_q51_bnh], 
+	["p = 1 (never lose)", bal_cmg, bal_spy],
+	["missed 10 best weeks", Q7(og_cmg, cmg_best_10), Q7(og_spy, spy_best_10)],
+	["invested during 10 worst weeks", Q7(og_cmg, cmg_worst_10), Q7(og_spy, spy_worst_10)],
+	["missed 5 best weeks and invested during 5 worst weeks", Q7(og_cmg, cmg_combine), Q7(og_spy, spy_combine)]]
+
+if generate_all:
+	Q5GenerateTable(q7_data, "7")
+else:
+	print("Generate tables set to false...\n")
+
+
+print("\nQuestion 7.2:")
+print("For both stocks, you lost more money by being invested in the worst weeks than missing out on the best weeks.\n")
+
+
+print("\nQuestion 7.3:")
+print("For all three scenarios, the p value seems to be around 0.9")
+
+
 
 
