@@ -6,6 +6,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 generate_all = False
 
@@ -387,22 +388,55 @@ for i in months:
 if generate_all:
 	Q5GenerateTable(q54_data, "5.4")
 else:
-	print("Generate tables set to false...\n")
+	print("Generate tables set to false...")
 
-
+print("For CMG, the best month to vacation was October, and the worst month was April")
+print("For SPY, the best month to vacation was March, and the worst month was April\n")
 
 # Question 6 =================================================================================================
 # TODO: For both stocks trade each week with the oracle
 # Generate random number r between 0 and 1, if p >= r, the oracle predicts true value, otherwise opposite
 # Generate table doing this ten times for p = 0 to 1 with 0.1 steps
+print("\nQuestion 6:")
+p_values = np.arange(0, 1.1, 0.1)
 
+def Q6(file, p_val):
+	balance = 100
+	file_length = len(file.index)
+	i = 0
+	while i < file_length - 1:
+		today_stock = balance / file["Close"].get(i)
+		tmr_stock = balance / file["Close"].get(i + 1)
+		difference = abs(today_stock - tmr_stock)
+		if p_val >= random.random():
+			balance += difference * file["Close"].get(i + 1)
+		else:
+			balance -= difference * file["Close"].get(i + 1)
+		i += 1
+	return str(round(balance, 2))
+
+q6_data = [[]] * 12
+q6_data[0] = ["Buy-and-hold", cmg_q51_bnh, spy_q51_bnh]
+a = 0
+while a < 11:
+	q6_data[a + 1] = ["p = " + str(round(p_values[a], 2)), Q6(og_cmg, p_values[a]), Q6(og_spy, p_values[a])]
+	a += 1
+
+if generate_all:
+	Q5GenerateTable(q6_data, "6")
+else:
+	print("Generate tables set to false...\n")
 
 # Question 6.1 =================================================================================================
 # TODO: What value of p equals buy and hold results?
+print("\nQuestion 6.1:")
+print("For both stocks, somewhere between p = 0.5 and 0.6 equals the revenue from buy-and-hold\n")
 
 
 # Question 6.2 =================================================================================================
 # TODO: Any patterns in table from question 6?
+print("\nQuestion 6.2:")
+print("For both stocks, there is an exponential increase in end balance as p increased\n")
 
 
 # Question 7.1 =================================================================================================
